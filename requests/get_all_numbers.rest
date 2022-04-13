@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/persons
+GET https://phonebackendlauri.herokuapp.com/api/persons/
 

@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/persons
+POST https://phonebackendlauri.herokuapp.com/api/persons
 content-type: application/json
 
 {
