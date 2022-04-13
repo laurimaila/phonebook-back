@@ -1,2 +1,2 @@
-Deployed phonebook-backend
-https://phonebackendlauri.herokuapp.com/api/persons/ 
+Deployed back+front
+https://phonebackendlauri.herokuapp.com/
