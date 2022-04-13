@@ -2,10 +2,14 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
+const cors = require('cors')
+
+app.use(cors())
+
 app.use(bodyParser.json())
 
 const generateId = () => {
-  const maxId = notes.length > 0 ? notes.map(n => n.id).sort((a,b) => a - b).reverse()[0] : 1
+  const maxId = notes.length > 0 ? notes.map(n => n.id).sort((a, b) => a - b).reverse()[0] : 1
   return maxId + 1
 }
 function getRandomInt() {
@@ -17,13 +21,13 @@ app.post('/api/persons', (request, response) => {
   const huut = body.name
 
   if (body.name === undefined) {
-    return response.status(400).json({error: 'Missing name'})
+    return response.status(400).json({ error: 'Missing name' })
   }
   if (body.number === undefined) {
-    return response.status(400).json({error: 'Missing number'})
+    return response.status(400).json({ error: 'Missing number' })
   }
   if (numbers.some(i => i.name.includes(body.name))) {
-    return response.status(400).json({error: 'Name must be unique'})
+    return response.status(400).json({ error: 'Name must be unique' })
   }
 
   const number = {
@@ -39,27 +43,27 @@ app.post('/api/persons', (request, response) => {
 })
 
 var numbers = [
-    {
-      name: "Arto Hellas",
-      number: "040-123456",
-      id: 1,
-    },
-    {
-      name: "Martti Tienari",
-      number: "040-123456",
-      id: 2,
-    },
-    {
-      name: "Arto Järvinen",
-      number: "040-123456",
-      id: 3,
-    },
-    {
-      name: "Lea Kutvonen",
-      number: "040-123456",
-      id: 4,
-    }
-  ]
+  {
+    name: "Arto Hellas",
+    number: "040-123456",
+    id: 1,
+  },
+  {
+    name: "Martti Tienari",
+    number: "040-123456",
+    id: 2,
+  },
+  {
+    name: "Arto Järvinen",
+    number: "040-123456",
+    id: 3,
+  },
+  {
+    name: "Lea Kutvonen",
+    number: "040-123456",
+    id: 4,
+  }
+]
 
 app.get('/', (req, res) => {
   res.send('<h1>Phonebook</h1>')
@@ -71,25 +75,32 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const number = numbers.find(number => number.id === id)
-  
-    if ( number ) {
-      response.json(number)
-      console.log("Näytetään yksi numero")
-    } else {
-      response.status(404).end()
-      console.log("Numeroa ei löytynyt")
-    }
-  })
+  const id = Number(request.params.id)
+  const number = numbers.find(number => number.id === id)
 
-  app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    numbers = numbers.filter(number => number.id !== id)
-    console.log("Numero poistettu")
-  
-    response.status(204).end()
-  })
+  if (number) {
+    response.json(number)
+    console.log("Näytetään yksi numero")
+  } else {
+    response.status(404).end()
+    console.log("Numeroa ei löytynyt")
+  }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  numbers = numbers.filter(number => number.id !== id)
+  console.log("Numero poistettu")
+
+  response.status(204).end()
+})
+
+const error = (request, response) => {
+  response.status(404).send({error: 'unknown endpoint'})
+}
+
+app.use(error)
+
 
 const PORT = 3001
 app.listen(PORT, () => {
