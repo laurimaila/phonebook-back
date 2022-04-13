@@ -8,69 +8,85 @@ const generateId = () => {
   const maxId = notes.length > 0 ? notes.map(n => n.id).sort((a,b) => a - b).reverse()[0] : 1
   return maxId + 1
 }
+function getRandomInt() {
+  return Math.floor(Math.random() * 20000);
+}
 
-app.post('/notes', (request, response) => {
+app.post('/api/persons', (request, response) => {
   const body = request.body
+  const huut = body.name
 
-  if (body.content === undefined) {
-    return response.status(400).json({error: 'content missing'})
+  if (body.name === undefined) {
+    return response.status(400).json({error: 'Missing name'})
+  }
+  if (body.number === undefined) {
+    return response.status(400).json({error: 'Missing number'})
+  }
+  if (numbers.some(i => i.name.includes(body.name))) {
+    return response.status(400).json({error: 'Name must be unique'})
   }
 
-  const note = {
-    content: body.content,
-    important: body.important|| false,
-    date: new Date(),
-    id: generateId()
+  const number = {
+    name: body.name,
+    number: body.number,
+    id: getRandomInt()
   }
 
-  notes = notes.concat(note)
+  numbers = numbers.concat(number)
+  console.log("Numero lisätty")
 
-  response.json(note)
+  response.json(number)
 })
 
-let notes = [
+var numbers = [
     {
+      name: "Arto Hellas",
+      number: "040-123456",
       id: 1,
-      content: 'HTML on helppoa',
-      date: '2017-12-10T17:30:31.098Z',
-      important: true
     },
     {
+      name: "Martti Tienari",
+      number: "040-123456",
       id: 2,
-      content: 'Selain pystyy suorittamaan vain javascriptiä',
-      date: '2017-12-10T18:39:34.091Z',
-      important: false
     },
     {
+      name: "Arto Järvinen",
+      number: "040-123456",
       id: 3,
-      content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-      date: '2017-12-10T19:20:14.298Z',
-      important: true
+    },
+    {
+      name: "Lea Kutvonen",
+      number: "040-123456",
+      id: 4,
     }
   ]
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello World Huut!</h1>')
+  res.send('<h1>Phonebook</h1>')
 })
 
-app.get('/notes', (req, res) => {
-  res.json(notes)
+app.get('/api/persons', (req, res) => {
+  res.json(numbers)
+  console.log("Näytetään kaikki numerot")
 })
 
-app.get('/notes/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
+    const number = numbers.find(number => number.id === id)
   
-    if ( note ) {
-      response.json(note)
+    if ( number ) {
+      response.json(number)
+      console.log("Näytetään yksi numero")
     } else {
       response.status(404).end()
+      console.log("Numeroa ei löytynyt")
     }
   })
 
-  app.delete('/notes/:id', (request, response) => {
+  app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
+    numbers = numbers.filter(number => number.id !== id)
+    console.log("Numero poistettu")
   
     response.status(204).end()
   })
