@@ -1,7 +1,7 @@
-POST https://phonebackendlauri.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "Lauri Maila",
+    "name": "Laura Maila",
     "number": "040-123456"
 }
